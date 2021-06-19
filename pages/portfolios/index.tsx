@@ -76,12 +76,16 @@ const fetchUpdatePortfolio = async (id: number) => {
   return graph?.data.updatePortfolio;
 }
 
+const deletePortfolio = (id: number) => {
+  alert('РЕШИЛ НЕ ДОБАВЛЯТЬ, ТАК КАК БУДЕТ ПЕРЕДЕЛАНО');
+}
 
 const Portfolios = ({ portfolios: data }: any) => {
   const [portfolios, setPortfolios] = useState(data);
 
   const createPortfolio = async () => {
     const portfolio = await fetchCreatePortfolio();
+    setPortfolios((prev: any) => [...prev, portfolio]);
   }
 
   const updatePortfolio = async (id: number) => {
@@ -115,7 +119,7 @@ const Portfolios = ({ portfolios: data }: any) => {
                 </a>
               </Link>
               <button className="btn btn-warning" onClick={() => updatePortfolio(item._id)}>Update Portfolio</button>
-              <button className="btn btn-error" onClick={() => deletePortfolio(item._id)}>Delete Portfolio</button>
+              <button className="btn btn-danger" onClick={() => deletePortfolio(item._id)}>Delete Portfolio</button>
             </div>
           ))}
         </div>
