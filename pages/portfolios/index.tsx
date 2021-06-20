@@ -1,49 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import PortfolioCard from 'components/Portfolios/PortfolioCard';
 import Link from 'next/link';
-
-const fetchPortfolios = async () => {
-  const query = `query Portfolios {
-      portfolios {
-        _id, 
-        title, 
-        company, 
-        companyWebsite, 
-        location, 
-        jobTitle, 
-        description,
-        startDate,
-        endDate
-      }
-    }`;
-  const { data: graph }: any = await axios.post('http://localhost:3001/graphql', { query });
-  return graph?.data.portfolios;
-}
+import { GET_PORTFOLIOS, CREATE_PORTFOLIO } from 'apollo/queries';
+import { useQuery, useMutation } from '@apollo/client';
+import { GetServerSidePropsContext } from 'next';
+import withApollo from 'hoc/withApollo';
+import { getDataFromTree } from '@apollo/react-ssr';
 
 const fetchCreatePortfolio = async () => {
-  const query = `mutation CreatePortfolio {
-      createPortfolio(input: {
-        title: "Title 1",
-        company: "Company 1",
-        companyWebsite: "Website 1",
-        location: "Location 1",
-        jobTitle: "JobTitle 1",
-        description: "Desc 1",
-        startDate: "17/06/2021",
-        endDate: "17/06/2021"
-      }) {
-        _id, 
-        title, 
-        company, 
-        companyWebsite, 
-        location, 
-        jobTitle, 
-        description,
-        startDate,
-        endDate
-      }
-    }`;
+  const query = ``;
   const { data: graph }: any = await axios.post('http://localhost:3001/graphql', { query });
   return graph?.data.createPortfolio;
 }
@@ -80,21 +46,30 @@ const deletePortfolio = (id: number) => {
   alert('РЕШИЛ НЕ ДОБАВЛЯТЬ, ТАК КАК БУДЕТ ПЕРЕДЕЛАНО');
 }
 
-const Portfolios = ({ portfolios: data }: any) => {
-  const [portfolios, setPortfolios] = useState(data);
+const Portfolios = () => {
+  // const onPortfolioCreated = ({ createPortfolio }: any) => {
+  //   setPortfolios((prev: any) => [...prev, createPortfolio]);
+  // };
 
-  const createPortfolio = async () => {
-    const portfolio = await fetchCreatePortfolio();
-    setPortfolios((prev: any) => [...prev, portfolio]);
-  }
+  const [createPortfolio] = useMutation(CREATE_PORTFOLIO, {
+    update(cache, { data: createPortfolio }) {
+      console.log('cache', cache);
+      const { portfolios }: any = cache.readQuery({ query: GET_PORTFOLIOS });
+      cache.writeQuery({
+        query: GET_PORTFOLIOS,
+        data: { portfolios: [...portfolios, createPortfolio] },
+      });
+    }
+  })
+
+  const { data } = useQuery(GET_PORTFOLIOS);
+  // const [createPortfolio] = useMutation(CREATE_PORTFOLIO, { onCompleted: onPortfolioCreated });
 
   const updatePortfolio = async (id: number) => {
     const portfolio = await fetchUpdatePortfolio(id);
-    const newPortfolios = Array.from(portfolios);
-    const idx = portfolios.findIndex((p: any) => p._id === id);
-    newPortfolios[idx] = portfolio;
-    setPortfolios(newPortfolios);
   }
+
+  const portfolios = data && data.portfolios || [];
 
   return (
     <>
@@ -104,7 +79,7 @@ const Portfolios = ({ portfolios: data }: any) => {
             <h1>Portfolios</h1>
           </div>
         </div>
-        <button onClick={createPortfolio} className="btn btn-primary mb-3">Create Portfolio</button>
+        <button onClick={() => createPortfolio()} className="btn btn-primary mb-3">Create Portfolio</button>
       </section>
       <section className="pb-5">
         <div className="row">
@@ -128,11 +103,8 @@ const Portfolios = ({ portfolios: data }: any) => {
   )
 }
 
-export const getServerSideProps = async (ctx) => {
-  const portfolios = await fetchPortfolios();
-  return {
-    props: { portfolios }, // will be passed to the page component as props
-  }
-}
+// export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
-export default Portfolios
+// }
+
+export default withApollo(Portfolios as any, { getDataFromTree });

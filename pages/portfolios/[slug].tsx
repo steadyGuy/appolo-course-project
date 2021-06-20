@@ -2,22 +2,11 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { GET_PORTFOLIO } from 'apollo/queries';
+import withApollo from 'hoc/withApollo';
 
 const PortfolioDetail = ({ slug }: any) => {
-  const [portfolio, setPortfolio] = useState(null);
-  const [getPortfolio, { loading, data }] = useLazyQuery(GET_PORTFOLIO);
-
-  useEffect(() => {
-    getPortfolio({ variables: { id: slug } });
-  }, []);
-
-  if (data && !portfolio) {
-    setPortfolio(data.portfolio);
-  }
-
-  if (loading || !portfolio) {
-    return 'Loading...';
-  }
+  const { data } = useQuery(GET_PORTFOLIO, { variables: { id: slug } });
+  const portfolio = data && data.portfolio || {};
 
   return (
     <div className="portfolio-detail">
@@ -72,4 +61,4 @@ export async function getServerSideProps(ctx: any) {
 //   return { slug }
 // }
 
-export default PortfolioDetail;
+export default withApollo(PortfolioDetail);
