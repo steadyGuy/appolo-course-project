@@ -1,5 +1,5 @@
 import connection from '../libs/db';
-import fakeDb from './portfolios';
+import fakeDb from './fakeDB';
 
 connection.once('open', async () => {
   console.log('Successful connected to db for populating mock data');

@@ -1,8 +1,8 @@
 import PortfolioModel from '../models/PortfolioModel';
+import UserModel from '../models/UserModel';
 import data from './data';
 
-class FakePortfolios {
-
+class FakeDB {
   async populate() {
     await this.clean();
     await this.add();
@@ -10,11 +10,13 @@ class FakePortfolios {
 
   async add() {
     await PortfolioModel.create(data.portfolios);
+    await UserModel.create(data.users);
   }
 
   async clean() {
     await PortfolioModel.deleteMany({});
+    await UserModel.deleteMany({});
   }
 }
 
-export default new FakePortfolios();
+export default new FakeDB();

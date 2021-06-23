@@ -21,3 +21,14 @@ export const portfolioTypes = `
     ${portfolioFields}
   }
 `;
+
+export const userTypes = `
+  input SignUpInput {
+    avatar: String
+    userName: String!
+    displayname: String
+    email: String!
+    password: String!
+    passwordConfirmation: String!
+  }
+`

@@ -1,12 +1,15 @@
 import { ApolloServer, gql } from 'apollo-server-express';
 import PortfolioModel from '../models/PortfolioModel';
-import { portfolioQueries, portfolioMutations } from './resolvers';
-import { portfolioTypes } from './types';
+import UserModel from '../models/UserModel';
+import { portfolioQueries, portfolioMutations, userMutations } from './resolvers';
+import { portfolioTypes, userTypes } from './types';
 import Portfolio from './models/Portfolio';
+import User from './models/User';
 
 // Construct a schema using graphql schema language
 const typeDefs = gql`
   ${portfolioTypes}
+  ${userTypes}
   type Query {
     portfolio(id: ID): Portfolio
     portfolios: [Portfolio]
@@ -16,6 +19,10 @@ const typeDefs = gql`
     createPortfolio(input: PortfolioInput): Portfolio
     updatePortfolio(id: ID, input: PortfolioInput): Portfolio
     deletePortfolio(id: ID): ID
+
+    signIn: String
+    signUp(input: SignUpInput): String
+    signOut: String
   }
 `;
 
@@ -26,6 +33,7 @@ const resolvers = {
   },
   Mutation: {
     ...portfolioMutations,
+    ...userMutations,
   },
 };
 
@@ -34,6 +42,7 @@ const createApolloServer = () => {
     typeDefs, resolvers, context: () => ({
       models: {
         Portfolio: new Portfolio(PortfolioModel),
+        User: new User(UserModel),
       }
     }),
   })

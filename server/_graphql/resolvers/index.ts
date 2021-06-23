@@ -18,3 +18,16 @@ export const portfolioMutations = {
     return await ctx.models.Portfolio.asyncfindAndDelete(id);
   }
 }
+
+export const userMutations = {
+  signIn: async (_: any, __: any, { models: { User } }: any) => {
+    return User.signIn();
+  },
+  signUp: async (_: any, { input }: any, { models: { User } }: any) => {
+    const user = await User.signUp(input);
+    return user._id;
+  },
+  signOut: async (_: any, __: any, { models: { User } }: any) => {
+    return User.sginOut();
+  },
+}

@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "apollo-server-express": "^2.25.1",
+    "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
@@ -14,9 +15,11 @@
     "mongoose": "^5.12.14"
   },
   "scripts": {
-    "server": "ts-node-dev index.ts --clear --notify"
+    "server": "ts-node-dev index.ts --clear --notify",
+    "mock": "ts-node-dev fixtures/populate.ts --clear"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.10",
     "@types/dotenv": "^8.2.0",
