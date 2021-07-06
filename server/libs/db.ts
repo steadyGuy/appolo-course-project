@@ -1,3 +1,5 @@
+import session from 'express-session';
+import MongoDBStore from 'connect-mongodb-session';
 import mongoose from 'mongoose';
 
 const URI = `${process.env.MONGODB_URI}`;
@@ -12,5 +14,15 @@ connection.on('error', (err) => {
   if (err) throw err;
   console.error.bind(console, 'connection error');
 });
+
+export const initSessionStore = () => {
+  const _MongoDBStore = MongoDBStore(session);
+  const store = new _MongoDBStore({
+    uri: `${process.env.MONGODB_URI}`,
+    collection: 'portfolioSessions',
+  });
+
+  return store;
+}
 
 export default connection;

@@ -1,3 +1,5 @@
+import { IUser } from '../../models/UserModel';
+
 class User {
   public Model: any;
 
@@ -5,8 +7,14 @@ class User {
     this.Model = model;
   }
 
-  signIn() {
-    return 'Sign in...';
+  async signIn({ email, password }: any, authenticate: any) {
+    try {
+      const user: IUser = await authenticate({ email, password });
+      return user;
+    } catch (err) {
+      return err;
+    }
+
   }
 
   async signUp(userData: any) {
@@ -18,8 +26,17 @@ class User {
     return this.Model.create(userData);
   }
 
-  signOut() {
-    return 'Sign Out...';
+  signOut(ctx: any) {
+    try {
+      // console.log('BEFORE LOGOUT-----------');
+      // console.log('is authenticated', ctx.isAuthenticated())
+      ctx.logout();
+      // console.log('AFTER LOGOUT-----------');
+      // console.log('is authenticated', ctx.isAuthenticated())
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
 }

@@ -20,14 +20,14 @@ export const portfolioMutations = {
 }
 
 export const userMutations = {
-  signIn: async (_: any, __: any, { models: { User } }: any) => {
-    return User.signIn();
+  signIn: async (_: any, { input }: any, { authenticate, models: { User } }: any) => {
+    return User.signIn(input, authenticate);
   },
   signUp: async (_: any, { input }: any, { models: { User } }: any) => {
     const user = await User.signUp(input);
     return user._id;
   },
-  signOut: async (_: any, __: any, { models: { User } }: any) => {
-    return User.sginOut();
+  signOut: async (_: any, __: any, { models: { User }, logout, isAuthenticated }: any) => {
+    return User.signOut({ logout, isAuthenticated });
   },
 }

@@ -23,6 +23,15 @@ export const portfolioTypes = `
 `;
 
 export const userTypes = `
+  type User {
+    _id: ID
+    avatar: String
+    userName: String
+    displayname: String
+    email: String
+    role: String
+  }
+
   input SignUpInput {
     avatar: String
     userName: String!
@@ -31,4 +40,9 @@ export const userTypes = `
     password: String!
     passwordConfirmation: String!
   }
-`
+
+  input SignInInput {
+    email: String!
+    password: String!
+  }
+`;

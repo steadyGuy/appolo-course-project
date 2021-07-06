@@ -2,7 +2,7 @@ import connection from '../libs/db';
 import { Schema, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-interface IUser extends Document {
+export interface IUser extends Document {
   avatar: string;
   email: string;
   displayname: string;
@@ -10,9 +10,10 @@ interface IUser extends Document {
   password: string;
   role: 'гость' | 'админ' | 'менеджер';
   about: string;
-}
+  validatePassword: (password: string) => boolean;
+};
 
-const UserSchema = new Schema({
+const UserSchema = new Schema<IUser>({
   avatar: String,
   email: {
     type: String,
@@ -63,5 +64,14 @@ UserSchema.pre<IUser>('save', async function (next) {
     return next(err);
   }
 });
+
+UserSchema.methods.validatePassword = async function (password: string) {
+  try {
+    if (!password) return false;
+    return await bcrypt.compare(password, this.password);
+  } catch (err) {
+    throw err;
+  }
+}
 
 export default connection.model<IUser>('User', UserSchema);

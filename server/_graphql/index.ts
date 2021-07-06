@@ -5,6 +5,7 @@ import { portfolioQueries, portfolioMutations, userMutations } from './resolvers
 import { portfolioTypes, userTypes } from './types';
 import Portfolio from './models/Portfolio';
 import User from './models/User';
+import { buildAuthContext } from './context';
 
 // Construct a schema using graphql schema language
 const typeDefs = gql`
@@ -20,9 +21,9 @@ const typeDefs = gql`
     updatePortfolio(id: ID, input: PortfolioInput): Portfolio
     deletePortfolio(id: ID): ID
 
-    signIn: String
+    signIn(input: SignInInput): User
     signUp(input: SignUpInput): String
-    signOut: String
+    signOut: Boolean
   }
 `;
 
@@ -39,11 +40,12 @@ const resolvers = {
 
 const createApolloServer = () => {
   const apolloServer = new ApolloServer({
-    typeDefs, resolvers, context: () => ({
+    typeDefs, resolvers, context: ({ req }) => ({
       models: {
         Portfolio: new Portfolio(PortfolioModel),
         User: new User(UserModel),
-      }
+      },
+      ...buildAuthContext(req),
     }),
   })
 
