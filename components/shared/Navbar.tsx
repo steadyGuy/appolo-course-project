@@ -35,7 +35,7 @@ const Navbar = () => {
           </Nav>
           <Nav className="ml-auto">
             <AppLink name="Sign In" url="/login" />
-            <AppLink name="Sign Up" url="/" className="btn-success bg-green-2 bright" />
+            <AppLink name="Sign Up" url="/register" className="btn-success bg-green-2 bright" />
           </Nav>
         </NavB.Collapse>
       </NavB>

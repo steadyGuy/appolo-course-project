@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { CREATE_PORTFOLIO, DELETE_PORTFOLIO, GET_PORTFOLIOS, UPDATE_PORTFOLIO } from 'apollo/queries';
+import { CREATE_PORTFOLIO, DELETE_PORTFOLIO, GET_PORTFOLIOS, SIGN_UP, UPDATE_PORTFOLIO } from 'apollo/queries';
 
 export const useCreatePortfolio = () => useMutation(CREATE_PORTFOLIO, {
   update(cache, { data: createPortfolio }) {
@@ -23,3 +23,5 @@ export const useDeletePortfolio = () => useMutation(DELETE_PORTFOLIO, {
 
 export const useUpdatePortfolio = () => useMutation(UPDATE_PORTFOLIO, {});
 export const useGetPortfolios = () => useQuery(GET_PORTFOLIOS);
+
+export const useCreateUser = () => useMutation(SIGN_UP);

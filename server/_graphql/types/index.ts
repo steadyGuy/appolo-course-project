@@ -26,7 +26,7 @@ export const userTypes = `
   type User {
     _id: ID
     avatar: String
-    userName: String
+    username: String
     displayname: String
     email: String
     role: String
@@ -34,7 +34,7 @@ export const userTypes = `
 
   input SignUpInput {
     avatar: String
-    userName: String!
+    username: String!
     displayname: String
     email: String!
     password: String!
